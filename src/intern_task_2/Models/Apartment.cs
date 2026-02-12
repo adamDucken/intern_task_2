@@ -13,5 +13,5 @@ public class Apartment
     public int HouseId { get; set; }
     public House? House { get; set; }
     
-    public ICollection<Resident> Residents { get; set; } = new List<Resident>();
+    public ICollection<ApartmentResident> ApartmentResidents { get; set; } = new List<ApartmentResident>();
 }

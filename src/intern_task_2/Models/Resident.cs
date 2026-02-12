@@ -10,6 +10,5 @@ public class Resident
     public string Phone { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     
-    public int ApartmentId { get; set; }
-    public Apartment? Apartment { get; set; }
+    public ICollection<ApartmentResident> ApartmentResidents { get; set; } = new List<ApartmentResident>();
 }
