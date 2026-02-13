@@ -1,0 +1,83 @@
+.card {
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.15);
+}
+
+.resident-row {
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+  }
+}
+
+.form-control:focus {
+  border-color: #212529;
+  box-shadow: 0 0 0 0.25rem rgba(33, 37, 41, 0.25);
+}
+
+.btn-light {
+  background-color: #f8f9fa;
+  border-color: #212529;
+  color: #212529;
+
+  &:hover {
+    background-color: #e9ecef;
+    border-color: #212529;
+    color: #212529;
+  }
+}
+
+.btn-dark {
+  background-color: #212529;
+  border-color: #212529;
+
+  &:hover {
+    background-color: #000;
+    border-color: #000;
+  }
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
+
+.bg-light {
+  background-color: #f8f9fa !important;
+}
+
+.bg-dark {
+  background-color: #212529 !important;
+}
+
+.border-dark {
+  border-color: #212529 !important;
+}
+
+h2, h3 {
+  color: #212529;
+}
+
+.table {
+  background-color: #ffffff;
+}
+
+.table thead th {
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+}
+
+.table tbody tr {
+  background-color: #ffffff;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.modal-header {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+}
