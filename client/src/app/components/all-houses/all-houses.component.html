@@ -1,0 +1,58 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-4">All Houses</h1>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-3">Loading houses...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error && !loading" class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+
+      <!-- Houses Table - Show when NOT loading -->
+      <div *ngIf="!loading && !error" class="card">
+        <div class="card-body">
+          <!-- Empty State -->
+          <div *ngIf="houses.length === 0" class="text-center py-4">
+            <p class="text-muted">No houses found.</p>
+          </div>
+
+          <!-- Table with houses -->
+          <div *ngIf="houses.length > 0" class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col">Number</th>
+                  <th scope="col">Street</th>
+                  <th scope="col">City</th>
+                  <th scope="col">Country</th>
+                  <th scope="col">Postal Code</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let house of houses"
+                  (click)="viewHouseDetails(house.id)"
+                  style="cursor: pointer;"
+                  class="house-row">
+                  <td>{{ house.number }}</td>
+                  <td>{{ house.street }}</td>
+                  <td>{{ house.city }}</td>
+                  <td>{{ house.country }}</td>
+                  <td>{{ house.postalCode }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
