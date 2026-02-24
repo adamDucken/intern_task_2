@@ -14,6 +14,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Apartment> Apartments { get; set; }
     public DbSet<Resident> Residents { get; set; }
     public DbSet<ApartmentResident> ApartmentResidents { get; set; }
+    public DbSet<AppUser> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -52,6 +53,18 @@ public class ApplicationDbContext : DbContext
             entity.Property(r => r.DateOfBirth).IsRequired();
             entity.Property(r => r.Phone).IsRequired().HasMaxLength(50);
             entity.Property(r => r.Email).IsRequired().HasMaxLength(200);
+        });
+
+        // AppUser configuration
+        modelBuilder.Entity<AppUser>(entity =>
+        {
+            entity.HasKey(u => u.Id);
+            entity.Property(u => u.Email).IsRequired().HasMaxLength(200);
+            entity.HasIndex(u => u.Email).IsUnique();
+            entity.Property(u => u.PasswordHash).HasMaxLength(500);
+            entity.Property(u => u.Role).IsRequired().HasMaxLength(50);
+            entity.Property(u => u.AuthProvider).IsRequired().HasMaxLength(50);
+            entity.Property(u => u.CreatedAt).IsRequired();
         });
 
         // House-Apartment relationship (one-to-many)
