@@ -1,0 +1,16 @@
+{
+  "name": "intern-task-2-tests",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test:auth": "node auth.test.js",
+    "test:houses": "node houses.test.js",
+    "test:apartments": "node apartments.test.js",
+    "test:residents": "node residents.test.js",
+    "test:all": "node auth.test.js && node houses.test.js && node apartments.test.js && node residents.test.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "pg": "^8.11.3"
+  }
+}
