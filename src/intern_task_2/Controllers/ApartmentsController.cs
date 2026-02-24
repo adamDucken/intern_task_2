@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using intern_task_2.DTOs;
 using intern_task_2.Services;
@@ -6,6 +7,7 @@ namespace intern_task_2.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ApartmentsController : ControllerBase
 {
     private readonly IApartmentService _apartmentService;
@@ -16,6 +18,7 @@ public class ApartmentsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Manager,Resident")]
     public async Task<ActionResult<IEnumerable<ApartmentDto>>> GetApartments()
     {
         var apartments = await _apartmentService.GetAllAsync();
@@ -23,17 +26,19 @@ public class ApartmentsController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "Manager,Resident")]
     public async Task<ActionResult<ApartmentDto>> GetApartment(int id)
     {
         var apartment = await _apartmentService.GetByIdAsync(id);
-        
+
         if (apartment == null)
-            return NotFound(new { message = "Apartment not found" });
-        
+            return NotFound(new { message = "apartment not found" });
+
         return Ok(apartment);
     }
 
     [HttpPost]
+    [Authorize(Roles = "Manager")]
     public async Task<ActionResult<ApartmentDto>> CreateApartment(ApartmentCreateDto dto)
     {
         try
@@ -48,15 +53,16 @@ public class ApartmentsController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Manager")]
     public async Task<IActionResult> UpdateApartment(int id, ApartmentUpdateDto dto)
     {
         try
         {
             var success = await _apartmentService.UpdateAsync(id, dto);
-            
+
             if (!success)
-                return NotFound(new { message = "Apartment not found" });
-            
+                return NotFound(new { message = "apartment not found" });
+
             return NoContent();
         }
         catch (ArgumentException ex)
@@ -66,13 +72,14 @@ public class ApartmentsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Manager")]
     public async Task<IActionResult> DeleteApartment(int id)
     {
         var success = await _apartmentService.DeleteAsync(id);
-        
+
         if (!success)
-            return NotFound(new { message = "Apartment not found" });
-        
+            return NotFound(new { message = "apartment not found" });
+
         return NoContent();
     }
 }
