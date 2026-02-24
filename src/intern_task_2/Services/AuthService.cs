@@ -13,11 +13,16 @@ public class AuthService : IAuthService
 {
     private readonly ApplicationDbContext _context;
     private readonly IConfiguration _configuration;
+    private readonly IGoogleTokenValidator _googleTokenValidator;
 
-    public AuthService(ApplicationDbContext context, IConfiguration configuration)
+    public AuthService(
+        ApplicationDbContext context,
+        IConfiguration configuration,
+        IGoogleTokenValidator googleTokenValidator)
     {
         _context = context;
         _configuration = configuration;
+        _googleTokenValidator = googleTokenValidator;
     }
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
@@ -35,7 +40,7 @@ public class AuthService : IAuthService
         if (!allowedRoles.Contains(dto.Role))
             throw new ArgumentException("role must be Manager or Resident");
 
-        var existingUser = await _context.Users.AnyAsync(u => u.Email == dto.Email);
+        var existingUser = await _context.Users.AnyAsync(u => u.Email == dto.Email.ToLower().Trim());
         if (existingUser)
             throw new ArgumentException("email is already registered");
 
@@ -51,11 +56,9 @@ public class AuthService : IAuthService
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
-        var token = GenerateJwtToken(user);
-
         return new AuthResponseDto
         {
-            Token = token,
+            Token = GenerateJwtToken(user),
             Email = user.Email,
             Role = user.Role
         };
@@ -77,15 +80,58 @@ public class AuthService : IAuthService
         if (user.AuthProvider != "local" || user.PasswordHash == null)
             throw new UnauthorizedAccessException("this account uses a different login method");
 
-        var passwordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
-        if (!passwordValid)
+        if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
             throw new UnauthorizedAccessException("invalid email or password");
-
-        var token = GenerateJwtToken(user);
 
         return new AuthResponseDto
         {
-            Token = token,
+            Token = GenerateJwtToken(user),
+            Email = user.Email,
+            Role = user.Role
+        };
+    }
+
+    public async Task<AuthResponseDto> GoogleLoginAsync(string idToken)
+    {
+        var payload = await _googleTokenValidator.ValidateAsync(idToken);
+
+        if (payload == null || string.IsNullOrWhiteSpace(payload.Email))
+            throw new UnauthorizedAccessException("invalid google id token");
+
+        return await FindOrCreateGoogleUserAsync(payload.Email);
+    }
+
+    // used only in development/testing — bypasses google signature check
+    public async Task<AuthResponseDto> GoogleLoginByEmailAsync(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            throw new ArgumentException("email is required");
+
+        return await FindOrCreateGoogleUserAsync(email.ToLower().Trim());
+    }
+
+    private async Task<AuthResponseDto> FindOrCreateGoogleUserAsync(string email)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+        if (user == null)
+        {
+            user = new AppUser
+            {
+                Email = email,
+                PasswordHash = null,
+                Role = "Resident",
+                AuthProvider = "google",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+        }
+
+        return new AuthResponseDto
+        {
+            Token = GenerateJwtToken(user),
             Email = user.Email,
             Role = user.Role
         };
