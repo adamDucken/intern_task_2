@@ -1,7 +1,10 @@
-export const API = "http://localhost:5291/api";
+const apiHost = process.env.API_HOST ?? "localhost";
+const dbHost = process.env.DB_HOST ?? "localhost";
+
+export const API = `http://${apiHost}:5291/api`;
 
 export const DB = {
-  host: "localhost",
+  host: dbHost,
   port: 5432,
   database: "intern_task_2_db",
   user: "admin",
