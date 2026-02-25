@@ -1,0 +1,11 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+  <a class="navbar-brand fw-bold" routerLink="/all-houses">property management</a>
+
+  <div class="ms-auto d-flex align-items-center gap-3" *ngIf="auth.isLoggedIn()">
+    <span class="text-light small">
+      {{ auth.getEmail() }}
+      <span class="badge bg-secondary ms-1">{{ auth.getRole() }}</span>
+    </span>
+    <button class="btn btn-outline-light btn-sm" (click)="logout()">logout</button>
+  </div>
+</nav>
