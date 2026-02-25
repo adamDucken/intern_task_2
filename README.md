@@ -1,45 +1,57 @@
-# intern task 2
+# intern_task_2
 
-REST API risinājums māju, dzīvokļu un iedzīvotāju pārvaldībai, izmantojot ASP.NET Core un Entity Framework Core.
+REST API for managing houses, apartments, and residents — built with ASP.NET Core, EF Core, Angular, and PostgreSQL.
 
-## funkcionalitāte
+## stack
 
-* **māju pārvaldība**: CRUD operācijas māju datu uzturēšanai.
-* **dzīvokļu pārvaldība**: Iespēja pievienot un rediģēt dzīvokļus, saistot tos ar konkrētām mājām.
-* **iedzīvotāju uzskaite**: Iedzīvotāju datu pārvaldība ar piesaisti dzīvokļiem.
-* **datu validācija**: Iebūvēta pārbaude e-pasta formātam, obligātajiem laukiem un skaitliskajām vērtībām.
-* **integrācijas testi**: Visu kontrolieru gala punktu (endpoints) automātiska testēšana.
-* **Swagger UI**: Interaktīva dokumentācija API testēšanai pārlūkprogrammā.
+- **backend**: ASP.NET Core 8, EF Core, PostgreSQL
+- **frontend**: Angular 19, pnpm
+- **auth**: JWT + Google OAuth2
+- **tests**: Node.js integration tests
 
-## kā palaist
+## features
 
-### palaist API lietojumprogrammu:
+- CRUD for houses, apartments, residents
+- JWT authentication with role-based authorization
+- Google OAuth2 login
+- input validation (email format, required fields, numeric values)
+- integration tests covering all endpoints and auth flows
+- Swagger UI for interactive API docs
 
+## run with docker
 ```bash
+./start.sh
+```
+
+builds and starts db + backend, runs integration tests, then starts frontend if tests pass.
+
+| service  | url                          |
+|----------|------------------------------|
+| backend  | http://localhost:5291        |
+| swagger  | http://localhost:5291/swagger|
+| frontend | http://localhost:4200        |
+
+## run locally
+```bash
+# api
 dotnet run --project src/intern_task_2
 
+# tests
+cd tests && pnpm test:all 
+
+# frontend
+cd client && pnpm install && pnpm start
 ```
 
-### palaist integrācijas testus:
+## requirements
 
-```bash
-dotnet test
+- .NET 8.0+
+- Node.js 22+, pnpm
+- PostgreSQL 16 (or Docker)
 
+## project structure
 ```
-
-### būvēt visu solution:
-
-```bash
-dotnet build
-
+src/intern_task_2/       # api — controllers, services, models, migrations
+tests/                   # integration tests (node js)
+client/                  # angular frontend
 ```
-
-## prasības
-
-* .NET 8.0 vai jaunāks
-* `Microsoft.EntityFrameworkCore.InMemory` (izmantots izstrādes un testēšanas nolūkos)
-
-## projekta struktūra
-
-* `src/intern_task_2`: API loģika, modeļi un datu piekļuves slānis.
-* `tests/intern_task_2.Tests`: Integrācijas testi, kas pārbauda API darbību.
