@@ -1,0 +1,26 @@
+.auth-wrapper {
+  background-color: #f8f9fa;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 12px;
+  border: 1px solid #dee2e6;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #212529;
+  box-shadow: 0 0 0 0.2rem rgba(33, 37, 41, 0.15);
+}
+
+.btn-dark {
+  background-color: #212529;
+  border-color: #212529;
+
+  &:hover {
+    background-color: #000;
+    border-color: #000;
+  }
+}
